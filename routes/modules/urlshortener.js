@@ -9,13 +9,28 @@ router.post('/newurl', (req, res) => {
     }
 
     return URLshortener.create(req.body)
-        .then(shortenurl => {
-            const urlData = shortenurl.toObject()
-            // shortenurl 是一個 Mongoose 文檔對象（Document Object），包含了從資料庫中查詢出來的資料
-            // toObject() 是 Mongoose 提供的方法，用來將 Mongoose 文檔轉換成普通的 JavaScript 對象
-            // 轉換後，urlData 就是一個純 JavaScript 對象，包含了相同的資料，但沒有 Mongoose 的特殊方法和屬性
-            res.render('newurl', { shortenurl: urlData })
+        // .then(shortenurl => {
+        //     const urlData = shortenurl.toObject()
+        //     // shortenurl 是一個 Mongoose 文檔對象（Document Object），包含了從資料庫中查詢出來的資料
+        //     // toObject() 是 Mongoose 提供的方法，用來將 Mongoose 文檔轉換成普通的 JavaScript 對象
+        //     // 轉換後，urlData 就是一個純 JavaScript 對象，包含了相同的資料，但沒有 Mongoose 的特殊方法和屬性
+        //     res.render('newurl', { shortenurl: urlData })
+        // })
+        
+        .then(() => {
+            let num = '0123456789'
+            let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            let charbox = num + alpha + alpha.toLowerCase()
+            let urlID = ''
+
+            for (let i = 0; i < 5; i++) {
+                urlID += charbox[Math.floor(Math.random() * 61)]
+                i + 1
+            }
+
+            res.render('newurl', { urlID: urlID })
         })
+        
         .catch(error => {
             console.log(error)
             req.flash('error', 'Error creating short URL')
