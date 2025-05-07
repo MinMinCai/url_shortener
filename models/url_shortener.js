@@ -3,7 +3,6 @@ const Schema = mogoose.Schema
 const urlShortenerSchema = new Schema({
     url: {
         type: String,
-        required: true
     }
 })
 

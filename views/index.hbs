@@ -5,12 +5,12 @@
     <img src="https://assets-lighthouse.alphacamp.co/uploads/image/file/16716/ExportedContentImage_00.png" alt="縮網址神器"
       style="width: clamp(150px, 15vw, 250px); height: auto; margin: 40px 0;">
   </div>
-  <div class="row d-flex flex-column align-items-center mb-5">
-    <div class="text-center mb-4" style="width: clamp(300px, 50vw, 500px);">
-      <input class="form-control" type="text" name="url" placeholder="請輸入網址..." value="{{url}}">
-    </div>
-    <form action="/urlshortener/newurl" method="GET" class="text-center">
-      <button type="submit" class="btn btn-outline-primary mb-3">Shorten!</button>
+  <div class="row mb-5">
+    <form action="/urlshortener/newurl" method="POST" class="d-flex flex-column align-items-center">
+      <div class="mb-4" style="width: clamp(300px, 50vw, 500px);">
+        <input class="form-control" type="text" name="url" placeholder="請輸入網址..." value="{{shortenurl.url}}">
+      </div>
+      <button type="submit" class="btn btn-outline-primary mb-3" style="font-weight: bold;">Shorten!</button>
     </form>
   </div>
 </div>
