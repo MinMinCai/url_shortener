@@ -4,8 +4,8 @@ const URLshortener = require('../../models/url_shortener')
 
 router.post('/newurl', (req, res) => {
     if (!req.body.url) {
-        req.flash('Please fill in your url.')
-        // return res.redirect('/')
+        req.flash('error', 'Please fill in your url.')
+        return res.redirect('/')
     }
 
     return URLshortener.create(req.body)
@@ -18,7 +18,8 @@ router.post('/newurl', (req, res) => {
         })
         .catch(error => {
             console.log(error)
-            res.redirect('/')
+            req.flash('error', 'Error creating short URL')
+            return res.redirect('/')
         })
 })
 

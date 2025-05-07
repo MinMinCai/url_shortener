@@ -12,5 +12,12 @@
       </div>
       <button type="submit" class="btn btn-outline-primary mb-3" style="font-weight: bold;">Shorten!</button>
     </form>
+      {{#if error}}
+      <div class=" d-flex justify-content-center text-center mt-3">
+        <div class="alert alert-danger" role="alert" style="font-weight: bold; border: 2px solid; width: clamp(350px, 55vw, 550px);">
+          {{error}}
+        </div>
+      </div>
+      {{/if}}
   </div>
 </div>
