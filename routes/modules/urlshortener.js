@@ -29,10 +29,10 @@ const createNewUrlID = async (url) => {
             url: url,
             urlid: newUrlID
         }
-        // 建立新聞檔，若urlid不存在(通過while迴圈)，將文檔存入資料庫
+        // 建立新文檔，若urlid不存在(通過while迴圈)，將文檔存入資料庫
         return await URLshortener.create(newDocument)
     } catch (error) {
-        console.error('Error creating new URL ID:', error)
+        console.error('Error creating short URL:', error)
         throw error
     }
 }
@@ -53,16 +53,36 @@ router.post('/newurl', async (req, res) => {
         // 若URL已存在，則顯示對應到的urlid
         if (existingUrl) {
             let completeurl = `http://superurlshortener/${existingUrl.urlid}`
-            return res.render('newurl', { completeurl })
+            let clickableUrl = `/${existingUrl.urlid}`
+            return res.render('newurl', { completeurl, clickableUrl, urlid: existingUrl.urlid })
         }
         // 若URL不存在，將生成新的urlid
         const newUrl = await createNewUrlID(url)
         let completeurl = `http://superurlshortener/${newUrl.urlid}`
-        res.render('newurl', { completeurl })
+        let clickableUrl = `/${newUrl.urlid}`
+        res.render('newurl', { completeurl, clickableUrl, urlid: newUrl.urlid })
     } catch (error) {
         console.log(error)
         req.flash('error', 'Error creating short URL')
         return res.redirect('/')
+    }
+})
+
+router.get('/:urlid', async(req, res, next) => {
+    try {
+        const urlid = req.params.urlid
+        // 透過urlid找到對應的url
+        const urlData = await URLshortener.findOne({ urlid })
+        // 若沒有找到對應的url，則顯示錯誤訊息
+        if (!urlData) {
+            return res.status(404).send('短網址不存在')
+        }
+        // 若有找到對應的url，則將使用者導向該url
+        const redirectUrl = urlData.url.startsWith('http') ? urlData.url : `http://${urlData.url}`
+        return res.redirect(301, redirectUrl) // 使用 301 永久重定向
+    } catch (error) {
+        console.error('導向原始URL錯誤:', error)
+        res.status(500).send('伺服器錯誤')
     }
 })
 
