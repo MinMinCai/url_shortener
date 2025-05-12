@@ -53,14 +53,14 @@ router.post('/newurl', async (req, res) => {
         // 若URL已存在，則顯示對應到的urlid
         if (existingUrl) {
             let completeurl = `http://superurlshortener/${existingUrl.urlid}`
-            let clickableUrl = `/${existingUrl.urlid}`
-            return res.render('newurl', { completeurl, clickableUrl, urlid: existingUrl.urlid })
+            let clickableUrl = `http://localhost:3001/${existingUrl.urlid}`
+            return res.render('newurl', { completeurl, clickableUrl, urlid: existingUrl.urlid, url: url })
         }
         // 若URL不存在，將生成新的urlid
         const newUrl = await createNewUrlID(url)
         let completeurl = `http://superurlshortener/${newUrl.urlid}`
-        let clickableUrl = `/${newUrl.urlid}`
-        res.render('newurl', { completeurl, clickableUrl, urlid: newUrl.urlid })
+        let clickableUrl = `http://localhost:3001/${newUrl.urlid}`
+        res.render('newurl', { completeurl, clickableUrl, urlid: newUrl.urlid, url: url })
     } catch (error) {
         console.log(error)
         req.flash('error', 'Error creating short URL')
@@ -78,7 +78,7 @@ router.get('/:urlid', async(req, res, next) => {
             return res.status(404).send('短網址不存在')
         }
         // 若有找到對應的url，則將使用者導向該url
-        const redirectUrl = urlData.url.startsWith('http') ? urlData.url : `http://${urlData.url}`
+        const redirectUrl = urlData.url
         return res.redirect(301, redirectUrl) // 使用 301 永久重定向
     } catch (error) {
         console.error('導向原始URL錯誤:', error)
